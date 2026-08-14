@@ -21,6 +21,9 @@ public class ExampleSubsystem extends SubsystemBase {
   public MonsterController bl_steer;
   public MonsterController br_steer;
 
+  private final MonsterController[] m_driveMotors;
+  private final MonsterController[] m_steerMotors;
+  private final MonsterController[] m_allMotors;
 
   /** Creates a new ExampleSubsystem. */
   public ExampleSubsystem() {
@@ -32,6 +35,73 @@ public class ExampleSubsystem extends SubsystemBase {
     fr_steer = new MonsterController(Constants.FR_STEER_CAN);
     bl_steer = new MonsterController(Constants.BL_STEER_CAN);
     br_steer = new MonsterController(Constants.BR_STEER_CAN);
+
+    m_driveMotors = new MonsterController[] {fl_drive, fr_drive, bl_drive, br_drive};
+    m_steerMotors = new MonsterController[] {fl_steer, fr_steer, bl_steer, br_steer};
+    m_allMotors =
+        new MonsterController[] {
+          fl_drive, fr_drive, bl_drive, br_drive, fl_steer, fr_steer, bl_steer, br_steer
+        };
+    bl_drive.setInverted(true);
+    br_drive.setInverted(true);
+    fr_steer.setInverted(true);
+    bl_steer.setInverted(true);
+  }
+
+  /**
+   * The four drive motors in FL, FR, BL, BR order.
+   *
+   * @return the drive motor controllers
+   */
+  public MonsterController[] driveMotors() {
+    return m_driveMotors;
+  }
+
+  /**
+   * The four steer motors in FL, FR, BL, BR order.
+   *
+   * @return the steer motor controllers
+   */
+  public MonsterController[] steerMotors() {
+    return m_steerMotors;
+  }
+
+  /**
+   * All eight motors, drive motors first, each group in FL, FR, BL, BR order.
+   *
+   * @return every motor controller on the board
+   */
+  public MonsterController[] allMotors() {
+    return m_allMotors;
+  }
+
+  /**
+   * Runs every drive motor at the same speed.
+   *
+   * @param speed normalized speed, -1.0 to 1.0
+   */
+  public void setAllDrive(double speed) {
+    for (MonsterController motor : m_driveMotors) {
+      motor.set(speed);
+    }
+  }
+
+  /**
+   * Runs every steer motor at the same speed.
+   *
+   * @param speed normalized speed, -1.0 to 1.0
+   */
+  public void setAllSteer(double speed) {
+    for (MonsterController motor : m_steerMotors) {
+      motor.set(speed);
+    }
+  }
+
+  /** De-energizes every motor driver, unlike {@link #stopMotors()} which leaves them powered. */
+  public void disableAll() {
+    for (MonsterController motor : m_allMotors) {
+      motor.disable();
+    }
   }
 
   /**

@@ -5,9 +5,11 @@
 package frc.robot;
 
 import frc.robot.Constants.OperatorConstants;
-import frc.robot.commands.Autos;
 import frc.robot.commands.ExampleCommand;
+import frc.robot.commands.tests.SwerveTests;
 import frc.robot.subsystems.ExampleSubsystem;
+import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
@@ -26,10 +28,60 @@ public class RobotContainer {
   private final CommandXboxController m_driverController =
       new CommandXboxController(OperatorConstants.kDriverControllerPort);
 
+  private final SendableChooser<Command> m_testChooser = new SendableChooser<>();
+
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
     // Configure the trigger bindings
     configureBindings();
+    configureTestChooser();
+  }
+
+  /**
+   * Publishes the motor controller test suite to the dashboard. The routines are listed in the
+   * order they are meant to be run, and the default selection is the one that commands no motion.
+   * The last three drive the chassis rather than individual motors, so they are labelled to make
+   * that obvious before anyone enables them.
+   */
+  private void configureTestChooser() {
+    m_testChooser.setDefaultOption(
+        "1. Range guards (no motion)", SwerveTests.rangeGuards(m_exampleSubsystem));
+    m_testChooser.addOption(
+        "2. Cached state checks (no motion)", SwerveTests.cachedStateChecks(m_exampleSubsystem));
+    m_testChooser.addOption(
+        "3. Identify drive motors", SwerveTests.identifyDriveMotors(m_exampleSubsystem));
+    m_testChooser.addOption(
+        "4. Identify steer motors", SwerveTests.identifySteerMotors(m_exampleSubsystem));
+    m_testChooser.addOption("5. Direction check", SwerveTests.directionCheck(m_exampleSubsystem));
+    m_testChooser.addOption("6. Inversion test", SwerveTests.inversionTest(m_exampleSubsystem));
+    m_testChooser.addOption("7. Stop vs disable", SwerveTests.stopVsDisable(m_exampleSubsystem));
+    m_testChooser.addOption(
+        "8. Steer calibration", SwerveTests.steerCalibration(m_exampleSubsystem));
+    m_testChooser.addOption(
+        "9. Absolute position sweep", SwerveTests.absolutePositionSweep(m_exampleSubsystem));
+    m_testChooser.addOption(
+        "10. Relative position steps", SwerveTests.relativePositionSteps(m_exampleSubsystem));
+    m_testChooser.addOption(
+        "11. Position speed test", SwerveTests.positionSpeedTest(m_exampleSubsystem));
+    m_testChooser.addOption(
+        "12. Position interrupt", SwerveTests.positionInterrupt(m_exampleSubsystem));
+    m_testChooser.addOption(
+        "13. Command coalescing", SwerveTests.commandCoalescing(m_exampleSubsystem));
+    m_testChooser.addOption(
+        "14. Diagnostic requests", SwerveTests.diagnosticRequests(m_exampleSubsystem));
+    m_testChooser.addOption("15. Module sweep", SwerveTests.moduleSweep(m_exampleSubsystem));
+    m_testChooser.addOption(
+        "16. All motors at once", SwerveTests.allMotorsAtOnce(m_exampleSubsystem));
+    m_testChooser.addOption(
+        "17. Drive straight (ROBOT MOVES)", SwerveTests.driveStraight(m_exampleSubsystem));
+    m_testChooser.addOption(
+        "18. Drive while steering (ROBOT MOVES)",
+        SwerveTests.driveWhileSteering(m_exampleSubsystem));
+    m_testChooser.addOption(
+        "19. Rotate in place (ROBOT MOVES)", SwerveTests.rotateInPlace(m_exampleSubsystem));
+    m_testChooser.addOption("Run all (1-19)", SwerveTests.runAll(m_exampleSubsystem));
+
+    SmartDashboard.putData("Test Routine", m_testChooser);
   }
 
   /**
@@ -54,10 +106,9 @@ public class RobotContainer {
   /**
    * Use this to pass the autonomous command to the main {@link Robot} class.
    *
-   * @return the command to run in autonomous
+   * @return the test routine selected on the dashboard
    */
   public Command getAutonomousCommand() {
-    // An example command will be run in autonomous
-    return Autos.exampleAuto(m_exampleSubsystem);
+    return m_testChooser.getSelected();
   }
 }

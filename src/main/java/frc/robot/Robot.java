@@ -17,6 +17,8 @@ import frc.robot.lib.MonsterProtocol;
  * this project, you must also update the Main.java file in the project.
  */
 public class Robot extends TimedRobot {
+  private static final int MOTOR_COUNT = 8;
+
   private Command m_autonomousCommand;
 
   private final RobotContainer m_robotContainer;
@@ -44,14 +46,24 @@ public class Robot extends TimedRobot {
     // commands, running already-scheduled commands, removing finished or interrupted commands,
     // and running subsystem periodic() methods.  This must be called from the robot's periodic
     // block in order for anything in the Command-based framework to work.
+    CommandScheduler.getInstance().run();
+    // Flush after the scheduler so a command's frames go out this cycle instead of the next one.
     if (MonsterProtocol.instance != null)
       MonsterProtocol.instance.periodic();
-    CommandScheduler.getInstance().run();
   }
 
   /** This function is called once each time the robot enters Disabled mode. */
   @Override
-  public void disabledInit() {}
+  public void disabledInit() {
+    // The board keeps executing the last speed it received, so stop every motor explicitly
+    // instead of relying on a command being scheduled to do it.
+    if (MonsterProtocol.instance != null) {
+      for (int motorID = 0; motorID < MOTOR_COUNT; motorID++) {
+        MonsterProtocol.instance.stop(motorID);
+      }
+      MonsterProtocol.instance.periodic();
+    }
+  }
 
   @Override
   public void disabledPeriodic() {}

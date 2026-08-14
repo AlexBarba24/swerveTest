@@ -17,6 +17,28 @@ public final class Constants {
     public static final int kDriverControllerPort = 0;
   }
 
+  /** Tunables for the motor controller API test routines. */
+  public static class TestConstants {
+    /** Normalized speed used when spinning a drive motor during a test. */
+    public static final double DRIVE_TEST_SPEED = 0.3;
+
+    /** Normalized speed used when spinning a steer motor during a test. */
+    public static final double STEER_TEST_SPEED = 0.2;
+
+    /** How long a single motion step of a test runs, in seconds. */
+    public static final double STEP_SECONDS = 1.5;
+
+    /** How long a test pauses between steps so the motion can be observed, in seconds. */
+    public static final double DWELL_SECONDS = 1.0;
+
+    /**
+     * Encoder counts for one full revolution of a steer motor. This is a placeholder: run the
+     * steerCalibration routine, measure the actual rotation, and correct this value before
+     * relying on the other position tests.
+     */
+    public static final int STEER_COUNTS_PER_REV = 3600;
+  }
+
   public static final int FL_DRIVE_CAN = 0;
   public static final int FR_DRIVE_CAN = 2;
   public static final int BL_DRIVE_CAN = 4;

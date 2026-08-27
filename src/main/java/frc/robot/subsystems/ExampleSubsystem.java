@@ -7,7 +7,8 @@ package frc.robot.subsystems;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
-import frc.robot.lib.MonsterController;
+import com.vendor.MonsterController;
+import com.vendor.MonsterEncoder;
 
 public class ExampleSubsystem extends SubsystemBase {
 
@@ -20,6 +21,8 @@ public class ExampleSubsystem extends SubsystemBase {
   public MonsterController fr_steer;
   public MonsterController bl_steer;
   public MonsterController br_steer;
+
+  public MonsterEncoder enc1;
 
   private final MonsterController[] m_driveMotors;
   private final MonsterController[] m_steerMotors;
@@ -46,6 +49,12 @@ public class ExampleSubsystem extends SubsystemBase {
     br_drive.setInverted(true);
     fr_steer.setInverted(true);
     bl_steer.setInverted(true);
+
+    enc1 = new MonsterEncoder(0);
+  }
+
+  public int testGetPos() {
+    return enc1.get();
   }
 
   /**

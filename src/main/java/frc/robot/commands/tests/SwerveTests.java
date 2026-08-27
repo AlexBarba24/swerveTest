@@ -7,8 +7,8 @@ package frc.robot.commands.tests;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import frc.robot.Constants.TestConstants;
-import frc.robot.lib.MonsterController;
-import frc.robot.lib.MonsterProtocol;
+import com.vendor.MonsterController;
+import com.vendor.MonsterProtocol;
 import frc.robot.subsystems.ExampleSubsystem;
 import java.util.ArrayList;
 import java.util.List;
@@ -993,7 +993,7 @@ public final class SwerveTests {
       for (MonsterController motor : m_subsystem.allMotors()) {
         motor.requestStatus();
       }
-      MonsterProtocol.instance.request_encoders();
+      MonsterProtocol.getInstance().request_encoders();
       log(
           "  round " + m_rounds + ": status requested on CAN 0-7 plus one encoder request, which "
               + "takes motor 0's buffer slot, so seven status frames and one encoder frame go out");

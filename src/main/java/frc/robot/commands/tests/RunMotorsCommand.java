@@ -4,7 +4,7 @@
 
 package frc.robot.commands.tests;
 
-import frc.robot.lib.MonsterController;
+import com.vendor.MonsterController;
 import frc.robot.subsystems.ExampleSubsystem;
 
 /**
